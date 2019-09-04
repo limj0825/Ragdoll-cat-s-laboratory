@@ -6,7 +6,7 @@
     <title>Title</title>
     <style>
       body{
-        background-image:url('static/images/background.jpg');
+        background-image:url('../static/images/background.jpg');
         background-size: 100%
       }
   </style>
@@ -15,5 +15,9 @@
     <h1>hello linjia</h1>
     <script src="../static/javascript/particle.js" count="100" color="255,0,0" opacity="1"></script>
     {{ mystr }}
+    {% for dict in dicts %}
+        {{ dict }} <br>
+    {% endfor %}
+
 </body>
 </html>

@@ -6,7 +6,8 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     mystr = 'mr.lee'
-    return render_template('base.html', mystr=mystr)
+    dicts = {'tp': 123}
+    return render_template('base.html', mystr=mystr, dicts=dicts)
 
 
 if __name__ == '__main__':
