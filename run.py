@@ -1,6 +1,13 @@
 from flask import Flask, render_template
+import pymongo
+from pymongo import MongoClient
+'''from config import db_config, app_config
 
+db = MongoClient(host=db_config['host'], port=db_config['port'])[
+    db_config['db_name']
+]'''
 app = Flask(__name__)
+#app.config['SECRET_KEY'] = app_config['secret_key']
 
 
 @app.route('/')
