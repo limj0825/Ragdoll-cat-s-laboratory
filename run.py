@@ -14,7 +14,7 @@ app = Flask(__name__)
 def index():
     mystr = 'mr.lee'
     dicts = {'tp': 123}
-    return render_template('base.html', mystr=mystr, dicts=dicts)
+    return render_template('index.html', mystr=mystr, dicts=dicts)
 
 
 if __name__ == '__main__':
