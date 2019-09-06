@@ -1,4 +1,6 @@
-.footer{
+.ui.footer.segment{
     bottom: 0;
     position: absolute;
+    padding: 5em;
+    width: 100%;
 }
