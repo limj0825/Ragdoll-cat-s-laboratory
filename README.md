@@ -12,7 +12,7 @@
     
     mv mongodb-linux-x86_64-4.0.3/ /usr/local/mongodb
     
-    export PATH=<mongodb-install-directory>/bin:$PATH
+    export PATH=\<mongodb-install-directory>/bin:$PATH
     
     \<mongodb-install-directory> 为你 MongoDB 的安装路径。如本文的 /usr/local/mongodb 。
     

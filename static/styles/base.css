@@ -1,6 +1,19 @@
-.ui.footer.segment{
-    bottom: 0;
-    position: absolute;
+html,body{
+    height: 100%;
+}
+#pusher{
+    width: 100%;
+    min-height: 100%;
+    height: auto;
+    position: relative;
+}
+.ui.container.main{
+    height: auto;
+    padding-bottom: 20em;
+}
+.ui.inverted.footer{
     padding: 5em;
+    position: absolute;
+    bottom: 0;
     width: 100%;
 }
