@@ -32,6 +32,7 @@
                 $('#yourname').val('');
                 $('#yourtext').val('');
                 $.ajax({
+                    async: false,
                     type: 'GET',
                     url: '/api/message',
                     data: data,
