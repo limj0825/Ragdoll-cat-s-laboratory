@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="ui container" style="padding-top: 7em">
+        <div class="ui list">
+            {% for name in data %}
+                {{ name }}
+                <br>
+                <br>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
