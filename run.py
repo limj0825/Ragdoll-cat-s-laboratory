@@ -13,6 +13,11 @@ app.config['SECRET_KEY'] = app_config['secret_key']
 message = db['message']
 
 
+@app.before_request
+def judge():
+    print('get it')
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -21,9 +26,10 @@ def index():
 @app.route('/api/message', methods=['GET'])
 def messages():
     try:
+        ip = request.remote_addr
         name = request.args.get('name')
         text = request.args.get('text')
-        message.insert_one({'name': name, 'text': text})
+        message.insert_one({'name': name, 'text': text, 'ip': ip})
         return success("")
     except Exception as e:
         return failure(repr(e))
@@ -34,6 +40,10 @@ def show():
     data = message.find()
     my_data = []
     for x in data:
+        if 'ip' in x:
+            my_data.append(x['ip'])
+        else:
+            my_data.append('0.0.0.0')
         my_data.append(x['name'])
         my_data.append(x['text'])
     return render_template('message.html', data=my_data)
