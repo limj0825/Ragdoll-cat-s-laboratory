@@ -19,29 +19,29 @@ records = db['records']
 def judge():
     now_time = math.ceil(time.time())
     ip = request.remote_addr
-    if records.count_documents({'name': 'ip'}) == 0:
+    if records.find({'name': 'ip'}) == 0:
         records.insert_one({'name': 'ip', 'denied': []})
-    denied = records.find_one()['denied']
+    denied = list(records.find_one()['denied'])
     if ip in denied:
-        ip_records = records.find_one({'name': ip})['notes']
+        ip_records = list(records.find_one({'name': ip})['notes'])
         if now_time - ip_records[0] >= 3600:
-            records.update({'name': ip}, {"$set": {"notes": []}})
+            records.update_one({'name': ip}, {"$set": {"notes": []}})
             denied.remove(ip)
-            records.update({'name': 'ip'}, {"$set": {"denied": denied}})
+            records.update_one({'name': 'ip'}, {"$set": {"denied": denied}})
         else:
             abort(401)
     else:
-        if records.count_documents({'name': ip}) == 0:
+        if records.find({'name': ip}) == 0:
             records.insert_one({'name': ip, 'notes': []})
-        notes = records.find_one({'name': ip})['notes']
+        notes = list(records.find_one({'name': ip})['notes'])
         while len(notes) > 0 and now_time - notes[0] >= 30:
             notes = notes[1:]
         notes.append(now_time)
-        records.update({'name': ip}, {"$set": {"notes": notes}})
+        records.update_one({'name': ip}, {"$set": {"notes": notes}})
         print(len(notes))
         if len(notes) >= 60:
             denied.append(ip)
-            records.update({'name': 'ip'}, {"$set": {"denied": denied}})
+            records.update_one({'name': 'ip'}, {"$set": {"denied": denied}})
             abort(401)
         else:
             pass
