@@ -19,7 +19,7 @@ records = db['records']
 def judge():
     now_time = math.ceil(time.time())
     ip = request.remote_addr
-    if records.count_documents({}):
+    if records.count_documents({'name': 'ip'}) == 0:
         records.insert_one({'name': 'ip', 'denied': []})
     denied = records.find_one()['denied']
     if ip in denied:
