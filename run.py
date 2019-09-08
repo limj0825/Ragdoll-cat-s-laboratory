@@ -1,9 +1,10 @@
 from flask import Flask, render_template
 from pymongo import MongoClient
 from config import db_config, app_config
-from flask import request
+from flask import request, abort
 from models.db_utility import auth_db
 from models.app_utility import success, failure
+import math, time
 
 db = MongoClient(host=db_config['host'], port=db_config['port'])[
     db_config['db_name']
@@ -11,11 +12,39 @@ db = MongoClient(host=db_config['host'], port=db_config['port'])[
 app = Flask(__name__)
 app.config['SECRET_KEY'] = app_config['secret_key']
 message = db['message']
+records = db['records']
 
 
 @app.before_request
 def judge():
-    print('get it')
+    now_time = math.ceil(time.time())
+    ip = request.remote_addr
+    if records.count_documents({}):
+        records.insert_one({'name': 'ip', 'denied': []})
+    denied = records.find_one()['denied']
+    if ip in denied:
+        ip_records = records.find_one({'name': ip})['notes']
+        if now_time - ip_records[0] >= 3600:
+            records.update({'name': ip}, {"$set": {"notes": []}})
+            denied.remove(ip)
+            records.update({'name': 'ip'}, {"$set": {"denied": denied}})
+        else:
+            abort(401)
+    else:
+        if records.count_documents({'name': ip}) == 0:
+            records.insert_one({'name': ip, 'notes': []})
+        notes = records.find_one({'name': ip})['notes']
+        while len(notes) > 0 and now_time - notes[0] >= 30:
+            notes = notes[1:]
+        notes.append(now_time)
+        records.update({'name': ip}, {"$set": {"notes": notes}})
+        print(len(notes))
+        if len(notes) >= 60:
+            denied.append(ip)
+            records.update({'name': 'ip'}, {"$set": {"denied": denied}})
+            abort(401)
+        else:
+            pass
 
 
 @app.route('/')
