@@ -77,5 +77,10 @@ def show():
     return render_template('message.html', data=my_data)
 
 
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=True, threaded=True)
