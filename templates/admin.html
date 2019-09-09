@@ -20,7 +20,7 @@
                             alert("删除成功  总共删除留言共" + result.result.toString() + "条")
                         }
                         else{
-                            alert("删除失败  请看console.log")
+                            alert("删除失败  " + result.message)
                             console.log(result)
                         }
                     },
