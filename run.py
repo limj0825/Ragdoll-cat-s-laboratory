@@ -4,7 +4,8 @@ from config import db_config, app_config
 from flask import request, abort
 from models.db_utility import auth_db
 from models.app_utility import success, failure
-import math, time
+import math
+import time
 
 db = MongoClient(host=db_config['host'], port=db_config['port'])[
     db_config['db_name']
@@ -57,7 +58,8 @@ def messages():
         ip = request.remote_addr
         name = request.args.get('name')
         text = request.args.get('text')
-        message.insert_one({'name': name, 'text': text, 'ip': ip})
+        now_time = time.asctime(time.localtime(time.time()))
+        message.insert_one({'name': name, 'text': text, 'ip': ip, 'time': now_time})
         return success("")
     except Exception as e:
         return failure(repr(e))
@@ -68,6 +70,10 @@ def show():
     data = message.find()
     my_data = []
     for x in data:
+        if 'time' in x:
+            my_data.append(x['time'])
+        else:
+            my_data.append("Mon Jan 1 00:00:00 1970")
         if 'ip' in x:
             my_data.append(x['ip'])
         else:
