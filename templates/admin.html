@@ -44,15 +44,15 @@
                     data: JSON.stringify(data),
                     success: function (result) {
                         if (result.message == "success"){
-                            alert("删除成功  总共删除留言共" + result.result.toString() + "条")
+                            alert("删除成功  总共删除留言共" + result.result.toString() + "条");
                         }
                         else{
-                            alert("删除失败  请看console.log")
-                            console.log(result)
+                            alert("删除失败  " + result.message);
+                            console.log(result);
                         }
                     },
                     error: function (result) {
-                        alert("请求失败")
+                        alert("请求失败");
                     }
                 })
             })
