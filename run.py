@@ -52,12 +52,13 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/api/message', methods=['GET'])
+@app.route('/api/message', methods=['POST'])
 def messages():
     try:
+        request_json = request.get_json(force=True)
         ip = request.remote_addr
-        name = request.args.get('name')
-        text = request.args.get('text')
+        name = request_json['name']
+        text = request_json['text']
         now_time = time.asctime(time.localtime(time.time()))
         message.insert_one({'name': name, 'text': text, 'ip': ip, 'time': now_time})
         return success("")
@@ -81,6 +82,26 @@ def show():
         my_data.append(x['name'])
         my_data.append(x['text'])
     return render_template('message.html', data=my_data)
+
+
+@app.route('/api/delete_message', methods=['POST'])
+def delete_message():
+    try:
+        request_json = request.get_json(force=True)
+        password = request_json['password']
+        assert(password == '2012lmjkl')
+        if 'name' in request_json:
+            name = request_json['name']
+            count = message.delete_many({'name': name}).deleted_count
+        else:
+            text = request_json['text']
+            count = message.delete_many({'text': text}).deleted_count
+    except AssertionError as e:
+        return failure("管理员密码错误")
+    except Exception as e:
+        return failure(repr(e))
+    else:
+        return success(count)
 
 
 @app.route('/admin')

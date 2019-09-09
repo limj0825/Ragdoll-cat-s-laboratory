@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block content %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#name").click(function () {
+                const password = $("#admin").val();
+                const name = $("#message_name").val();
+                const data = {
+                    'password': password,
+                    'name': name
+                }
+                $.ajax({
+                    async: false,
+                    type: 'POST',
+                    url: '/api/delete_message',
+                    contentType: 'application/json; charset=UTF-8',
+                    data: JSON.stringify(data),
+                    success: function (result) {
+                        if (result.message == "success"){
+                            alert("删除成功  总共删除留言共" + result.result.toString() + "条")
+                        }
+                        else{
+                            alert("删除失败  请看console.log")
+                            console.log(result)
+                        }
+                    },
+                    error: function (result) {
+                        alert("请求失败")
+                    }
+                })
+            })
+            $("#text").click(function () {
+                const password = $("#admin").val();
+                const text = $("#message_text").val();
+                const data = {
+                    'password': password,
+                    'text': text
+                }
+                $.ajax({
+                    async: false,
+                    type: 'POST',
+                    url: '/api/delete_message',
+                    contentType: 'application/json; charset=UTF-8',
+                    data: JSON.stringify(data),
+                    success: function (result) {
+                        if (result.message == "success"){
+                            alert("删除成功  总共删除留言共" + result.result.toString() + "条")
+                        }
+                        else{
+                            alert("删除失败  请看console.log")
+                            console.log(result)
+                        }
+                    },
+                    error: function (result) {
+                        alert("请求失败")
+                    }
+                })
+            })
+        })
+    </script>
+    <div class="ui container" style="padding-top: 7em;">
+        <div class="ui list">
+            <div class="ui right labeled left icon input">
+                <i class="cog icon"></i>
+                <input type="text" id="admin">
+                <a class="ui tag label">
+                    管理员密码
+                </a>
+            </div>
+            <br><br>
+            <div class="ui right labeled left icon input">
+                <i class="user icon"></i>
+                <input type="text" id="message_name" placeholder="删除指定名字的所有留言" style="width: 90%">
+                <a class="ui tag label icon" id="name">
+                    <i class="ui eraser icon"></i>
+                    删除
+                </a>
+            </div>
+            <br><br>
+            <div class="ui right labeled left icon input">
+                <i class="pencil alternate icon"></i>
+                <input type="text" id="message_text" placeholder="删除指定内容的所有留言" style="width: 90%">
+                <a class="ui tag label icon" id="text">
+                    <i class="ui eraser icon"></i>
+                    删除
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
