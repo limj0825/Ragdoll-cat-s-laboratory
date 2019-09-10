@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from pymongo import MongoClient
-from config import db_config, app_config
+from config import db_config, app_config, my_password
 from flask import request, abort
 from models.db_utility import auth_db
 from models.app_utility import success, failure
@@ -89,7 +89,7 @@ def delete_message():
     try:
         request_json = request.get_json(force=True)
         password = request_json['password']
-        assert(password == '2012lmjkl')
+        assert(password == my_password)
         if 'name' in request_json:
             name = request_json['name']
             count = message.delete_many({'name': name}).deleted_count
@@ -107,6 +107,11 @@ def delete_message():
 @app.route('/admin')
 def admin():
     return render_template('admin.html')
+
+
+@app.route('/laboratory')
+def test():
+    return render_template('laboratory.html')
 
 
 if __name__ == '__main__':

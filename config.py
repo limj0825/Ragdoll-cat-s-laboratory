@@ -9,3 +9,5 @@ db_config = {
 app_config = {
     'secret_key': 'test_only'
 }
+
+my_password = '2012lmjkl'
