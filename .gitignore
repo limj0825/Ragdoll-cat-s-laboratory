@@ -1,0 +1,6 @@
+.DS_Store
+/.idea/
+/venv/
+*.json
+*.pyc
+node_modules/
