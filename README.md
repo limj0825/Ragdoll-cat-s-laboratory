@@ -52,7 +52,7 @@ nohup python3 run.py > out.txt &
 
 # 继续开发代码
 
-##安装node.js
+## 安装node.js
 
 ```shell script
 cd /usr/local/src
@@ -66,7 +66,7 @@ ln -s ~/node-v10.16.3-linux-x64/bin/node /usr/bin/node
 ln -s ~/node-v10.16.3-linux-x64/bin/npm /usr/bin/npm
 ln -s ~/node-v10.16.3-linux-x64/bin/npx /usr/bin/npx
 ```
-##压缩react代码
+## 压缩react代码
 ```shell script
 npm init -y
 npm install terser
@@ -74,7 +74,7 @@ npx terser -c -m -o like_button.min.js -- like_button.js
 ```
 上述命令会用like_button.js生成一个新的压缩后的文件like_button.min.js
 
-##自动压缩JSX
+## 自动压缩JSX
 进入你的项目文件夹下
 ```shell script
 npm init -y
