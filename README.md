@@ -50,7 +50,7 @@ nohup python3 run.py > out.txt &
 
 
 
-# 继续开发代码
+# 用到react的代码开发环境
 
 ## 安装node.js
 
