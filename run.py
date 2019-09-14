@@ -109,6 +109,11 @@ def delete_message():
         return success(count)
 
 
+@app.route('/vote')
+def vote():
+    return render_template('vote.html')
+
+
 @app.route('/admin')
 def admin():
     return render_template('admin.html')
