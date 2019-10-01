@@ -2,24 +2,25 @@
 {% block content %}
     <script type="text/javascript">
         $(document).ready(function () {
+            $('.ui.left.pointing').hide();
             $("#change").click(function () {
                 const old_password = $("#old_password").val();
                 if (old_password.length == 0)
                 {
                     alert('旧密码为空');
-                    return ;
+                    return false;
                 }
                 const new_password = $("#new_password").val();
                 if (new_password.length == 0)
                 {
                     alert('新密码为空');
-                    return ;
+                    return false;
                 }
                 const confirm_password = $("#confirm").val();
                 if (new_password != confirm_password)
                 {
                     alert('两次输入的密码不一致')
-                    return ;
+                    return false;
                 }
                 const data = {
                     'old_password': old_password,
@@ -46,29 +47,98 @@
                         alert("请求失败");
                     }
                 })
-            })
+            });
+            $("#rabbit_send").click(function () {
+                $('.ui.left.pointing').hide();
+                if ($('#your_name').val().length == 0){
+                    $('.ui.left.pointing:even').show();
+                    return false;
+                }
+                if ($('#your_text').val().length == 0){
+                    $('.ui.left.pointing:odd').show();
+                    return false;
+                }
+                const data = {
+                    'name': $('#your_name').val(),
+                    'text': $('#your_text').val()
+                }
+                $('#your_name').val('');
+                $('#your_text').val('');
+                $.ajax({
+                    async: false,
+                    type: 'POST',
+                    url: '/api/rabbit_message',
+                    contentType: 'application/json; charset=UTF-8',
+                    data: JSON.stringify(data),
+                    success: function (result) {
+                        alert("留言成功(*^▽^*)");
+                        window.location.reload();
+                    },
+                    error: function (result) {
+                        alert("留言失败o(╥﹏╥)o");
+                    }
+                });
+            });
         })
     </script>
-    <div class="ui container" style="padding-top: 7em;">
+    <div class="ui container main" style="padding-top: 7em;">
+        <div class="ui stackable grid">
+            <div class="ui five wide column">
+                <div class="ui list">
+                    <div class="ui left icon input">
+                        <i class="cog icon"></i>
+                        <input type="text" id="old_password" placeholder="输入旧密码">
+                    </div>
+                    <br><br>
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="text" id="new_password" placeholder="输入新密码">
+                    </div>
+                    <br><br>
+                    <div class="ui right labeled left icon input">
+                        <i class="pencil alternate icon"></i>
+                        <input type="text" id="confirm" placeholder="再次输入新密码">
+                        <a class="ui tag label icon" id="change">
+                            <i class="ui eraser icon"></i>
+                            修改密码
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="ui eight wide column">
+                <div class="ui small left icon input">
+                    <i class="user icon"></i>
+                    <input type="text" placeholder="请输入你的名字" id="your_name">
+                </div>
+                <div class="ui left pointing red basic label">
+                    姓名不能为空
+                </div>
+                <br><br>
+                <div class="inline field">
+                    <div class="ui small left icon input">
+                        <i class="pencil icon"></i>
+                        <input type="text" placeholder="请输入你的留言" style="width: 300px" id="your_text">
+                    </div>
+                    <div class="ui left pointing red basic label">
+                        留言不能为空
+                    </div>
+                    <br><br>
+                    <div class="ui pink ok inverted button" id="rabbit_send">
+                        <i class="heart icon"></i>点击发送
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
         <div class="ui list">
-            <div class="ui left icon input">
-                <i class="cog icon"></i>
-                <input type="text" id="old_password" placeholder="输入旧密码">
-            </div>
-            <br><br>
-            <div class="ui left icon input">
-                <i class="user icon"></i>
-                <input type="text" id="new_password" placeholder="输入新密码">
-            </div>
-            <br><br>
-            <div class="ui right labeled left icon input">
-                <i class="pencil alternate icon"></i>
-                <input type="text" id="confirm" placeholder="再次输入新密码">
-                <a class="ui tag label icon" id="change">
-                    <i class="ui eraser icon"></i>
-                    修改密码
-                </a>
-            </div>
+            <HR>
+            {% for name in data %}
+                {{ name }}
+                <br>
+                <br>
+            {% endfor %}
+            <HR>
         </div>
     </div>
 {% endblock %}

@@ -15,6 +15,7 @@ app.config['SECRET_KEY'] = app_config['secret_key']
 message = db['message']
 records = db['records']
 rabbit = db['rabbit']
+rabbit_message = db['rabbit_message']
 
 
 @app.before_request
@@ -148,7 +149,28 @@ def rabbit_page(password):
     now_password = rabbit.find()[0]['password']
     if now_password != password:
         return render_template('404.html')
-    return render_template('rabbit.html')
+    data = rabbit_message.find()
+    my_data = []
+    for x in data:
+        my_data.append(x['time'])
+        my_data.append(x['ip'])
+        my_data.append(x['name'])
+        my_data.append(x['text'])
+    return render_template('rabbit.html', data=my_data)
+
+
+@app.route('/api/rabbit_message', methods=['POST'])
+def send_message():
+    try:
+        request_json = request.get_json(force=True)
+        ip = request.remote_addr
+        name = request_json['name']
+        text = request_json['text']
+        now_time = time.asctime(time.localtime(time.time()))
+        rabbit_message.insert_one({'name': name, 'text': text, 'ip': ip, 'time': now_time})
+        return success("")
+    except Exception as e:
+        return failure(repr(e))
 
 
 if __name__ == '__main__':
