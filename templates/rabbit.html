@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#change").click(function () {
+                const old_password = $("#old_password").val();
+                if (old_password.length == 0)
+                {
+                    alert('旧密码为空');
+                    return ;
+                }
+                const new_password = $("#new_password").val();
+                if (new_password.length == 0)
+                {
+                    alert('新密码为空');
+                    return ;
+                }
+                const confirm_password = $("#confirm").val();
+                if (new_password != confirm_password)
+                {
+                    alert('两次输入的密码不一致')
+                    return ;
+                }
+                const data = {
+                    'old_password': old_password,
+                    'new_password': new_password,
+                    'confirm_password': confirm_password
+                }
+                $.ajax({
+                    async: false,
+                    type: 'POST',
+                    url: '/api/change',
+                    contentType: 'application/json; charset=UTF-8',
+                    data: JSON.stringify(data),
+                    success: function (result) {
+                        if (result.message == "success"){
+                            alert(result.result);
+                            window.location.reload();
+                        }
+                        else{
+                            alert("修改失败  " + result.message);
+                            console.log(result);
+                        }
+                    },
+                    error: function (result) {
+                        alert("请求失败");
+                    }
+                })
+            })
+        })
+    </script>
+    <div class="ui container" style="padding-top: 7em;">
+        <div class="ui list">
+            <div class="ui left icon input">
+                <i class="cog icon"></i>
+                <input type="text" id="old_password" placeholder="输入旧密码">
+            </div>
+            <br><br>
+            <div class="ui left icon input">
+                <i class="user icon"></i>
+                <input type="text" id="new_password" placeholder="输入新密码">
+            </div>
+            <br><br>
+            <div class="ui right labeled left icon input">
+                <i class="pencil alternate icon"></i>
+                <input type="text" id="confirm" placeholder="再次输入新密码">
+                <a class="ui tag label icon" id="change">
+                    <i class="ui eraser icon"></i>
+                    修改密码
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

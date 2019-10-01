@@ -14,6 +14,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = app_config['secret_key']
 message = db['message']
 records = db['records']
+rabbit = db['rabbit']
 
 
 @app.before_request
@@ -109,6 +110,22 @@ def delete_message():
         return success(count)
 
 
+@app.route('/api/change', methods=['POST'])
+def change():
+    try:
+        request_json = request.get_json(force=True)
+        old_password = request_json['old_password']
+        now_password = rabbit.find()[0]['password']
+        assert(now_password == old_password)
+        rabbit.update_one({"password": old_password}, {"$set": {"password": request_json['new_password']}})
+    except AssertionError as e:
+        return failure("旧密码错误")
+    except Exception as e:
+        return failure(repr(e))
+    else:
+        return success("密码修改成功")
+
+
 @app.route('/vote')
 def vote():
     return render_template('vote.html')
@@ -122,6 +139,16 @@ def admin():
 @app.route('/laboratory')
 def test():
     return render_template('laboratory.html')
+
+
+@app.route('/<password>')
+def rabbit_page(password):
+    if rabbit.count() == 0:
+        rabbit.insert_one({'password': 'rabbit'})
+    now_password = rabbit.find()[0]['password']
+    if now_password != password:
+        return render_template('404.html')
+    return render_template('rabbit.html')
 
 
 if __name__ == '__main__':
