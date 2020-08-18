@@ -7,6 +7,9 @@ from models.app_utility import success, failure
 import math
 import time
 
+
+
+  
 db = MongoClient(host=db_config['host'], port=db_config['port'])[
     db_config['db_name']
 ]
